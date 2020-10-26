@@ -1,18 +1,22 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace ORMPerf.EF
 {
-    public class SQLiteContext : DbContext
+    public class MSSQLContext : DbContext
     {
-        public SQLiteContext()
+        public MSSQLContext()
         {
             Database.Migrate();
         }
+
         public DbSet<SimpleModel> Models { get; set; }
-        
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite(DBConfigMapper.GetDBConfig(DBType.SQLite).ConnectionString);
+            optionsBuilder.UseSqlServer(DBConfigMapper.GetDBConfig(DBType.MSSQL).ConnectionString);
         }
     }
 }

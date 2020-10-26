@@ -1,7 +1,7 @@
 ﻿namespace ORMPerf
 {
-    public interface IDatabase
+    class Database
     {
-        
+        public string ConnectionString { get; set; }
     }
 }
