@@ -21,9 +21,10 @@ namespace ORMPerf.Migrations.MSSQLMigrations
 
             modelBuilder.Entity("ORMPerf.SimpleModel", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("About")
                         .HasColumnType("nvarchar(max)");
@@ -36,7 +37,7 @@ namespace ORMPerf.Migrations.MSSQLMigrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Models");
+                    b.ToTable("SimpleModels");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,31 +1,33 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using MySql.Data.EntityFrameworkCore.Metadata;
 
 namespace ORMPerf.Migrations.MySqlMigrations
 {
-    public partial class InitialCreate : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Models",
+                name: "SimpleModels",
                 columns: table => new
                 {
-                    Id = table.Column<byte[]>(nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(nullable: true),
                     Birth = table.Column<DateTime>(nullable: false),
                     About = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Models", x => x.Id);
+                    table.PrimaryKey("PK_SimpleModels", x => x.Id);
                 });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Models");
+                name: "SimpleModels");
         }
     }
 }

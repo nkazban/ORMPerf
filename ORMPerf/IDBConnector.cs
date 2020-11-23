@@ -4,10 +4,11 @@ namespace ORMPerf
 {
     public interface IDBConnector
     {
-        void Connect();
         void AddRandomRows(int count);
+        void AddRandomRowsOneByOne(int count);
         IEnumerable<SimpleModel> ReadAll();
         void DeleteAllRows();
-        void Disconnect();
+
+        string Name { get; }
     }
 }

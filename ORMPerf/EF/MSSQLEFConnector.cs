@@ -6,33 +6,44 @@ namespace ORMPerf.EF
 {
     class MSSQLEFConnector : IDBConnector
     {
+        public string Name => "MS SQL Entity Framework";
+
         public void AddRandomRows(int count)
         {
             using (var ctx = new MSSQLContext())
             {
                 for (int i = 0; i < count; i++)
                 {
-                    var mdl = new SimpleModel();
-                    mdl.Id = Guid.NewGuid();
-                    mdl.Name = $"{i}";
-                    mdl.Birth = DateTime.Now;
-                    mdl.About = "";
-                    ctx.Models.Add(mdl);
+                    ctx.SimpleModels.Add(SimpleModel.CreateRandom());
+                    
                 }
                 ctx.SaveChanges();
             }
         }
 
-        public void Connect()
+        public void AddRandomRowsOneByOne(int count)
         {
+            using (var ctx = new MSSQLContext())
+            {
+                for (int i = 0; i < count; i++)
+                {
+                    ctx.SimpleModels.Add(SimpleModel.CreateRandom());
+                    ctx.SaveChanges();
+                }
+            }
         }
 
         public void DeleteAllRows()
         {
-        }
-
-        public void Disconnect()
-        {
+            var all = ReadAll();
+            using (var ctx = new MSSQLContext())
+            {
+                foreach(var model in all)
+                {
+                    ctx.Remove(model);
+                }
+                ctx.SaveChanges();
+            }
         }
 
         public IEnumerable<SimpleModel> ReadAll()
@@ -40,7 +51,7 @@ namespace ORMPerf.EF
             var result = new List<SimpleModel>();
             using(var context = new MSSQLContext())
             {
-                result.AddRange(context.Models);
+                result.AddRange(context.SimpleModels);
             }
             return result;
         }

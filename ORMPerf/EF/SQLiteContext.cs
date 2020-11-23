@@ -8,7 +8,7 @@ namespace ORMPerf.EF
         {
             Database.Migrate();
         }
-        public DbSet<SimpleModel> Models { get; set; }
+        public DbSet<SimpleModel> SimpleModels { get; set; }
         
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

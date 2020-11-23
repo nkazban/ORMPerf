@@ -2,6 +2,7 @@
 using ORMPerf.EF;
 using ORMPerf.Dapper;
 using Dapper;
+using System.Threading;
 
 namespace ORMPerf
 {
@@ -9,13 +10,22 @@ namespace ORMPerf
     {
         static void Main(string[] args)
         {
-            IDBConnector connector = DBConnectorsFactory.GetConnector(DBType.MSSQL, ConnectionType.ADO);
-            connector.Connect();
-            //connector.AddRandomRows(100);
-            var data = connector.ReadAll();
-            foreach(var d in data)
+            var logger = new ConsoleLogger();
+            for (int i = 2; i > -1; i--)
             {
-                Console.WriteLine(d.ToString());
+                for (int j = 0; j < 3; j++)
+                {
+                    IDBConnector connector = DBConnectorsFactory.GetConnector((DBType)i, (ConnectionType)(j % 3));
+
+                    var bench = new Benchmark(connector, logger);
+                    bench.Init();
+                    bench.WritingTest(100);
+                    bench.WritingOneByOneTest(100);
+                    bench.ReadingTest();
+                    bench.DeletingTest();
+                    Thread.Sleep(100);
+                    Console.WriteLine();
+                }
             }
 
             Console.WriteLine("Done");

@@ -19,9 +19,9 @@ namespace ORMPerf.Migrations.MySqlMigrations
 
             modelBuilder.Entity("ORMPerf.SimpleModel", b =>
                 {
-                    b.Property<byte[]>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("varbinary(16)");
+                        .HasColumnType("int");
 
                     b.Property<string>("About")
                         .HasColumnType("text");
@@ -34,7 +34,7 @@ namespace ORMPerf.Migrations.MySqlMigrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Models");
+                    b.ToTable("SimpleModels");
                 });
 #pragma warning restore 612, 618
         }

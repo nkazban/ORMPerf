@@ -9,10 +9,12 @@ namespace ORMPerf.EF
     {
         public MSSQLContext()
         {
+            //Database.EnsureDeleted();
+            //Database.EnsureCreated();
             Database.Migrate();
         }
 
-        public DbSet<SimpleModel> Models { get; set; }
+        public DbSet<SimpleModel> SimpleModels { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

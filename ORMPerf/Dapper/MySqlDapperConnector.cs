@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Dapper.Contrib.Extensions;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
@@ -10,28 +11,51 @@ namespace ORMPerf.Dapper
     {
         Database _db;
 
-        public void AddRandomRows(int count)
-        {
-        }
-
-        public void Connect()
+        public MySqlDapperConnector()
         {
             _db = DBConfigMapper.GetDBConfig(DBType.MySql);
         }
 
-        public void DeleteAllRows()
+        public string Name => "MySql Dapper";
+
+        public void AddRandomRows(int count)
         {
+            var list = new SimpleModel[count];
+            for (int i = 0; i < count; i++)
+            {
+                list[i] = SimpleModel.CreateRandom();
+            }
+
+            using (var conn = new MySqlConnection(_db.ConnectionString))
+            {
+                conn.Insert(list);
+            }
         }
 
-        public void Disconnect()
+        public void AddRandomRowsOneByOne(int count)
         {
+            using (var conn = new MySqlConnection(_db.ConnectionString))
+            {
+                for (int i = 0; i < count; i++)
+                {
+                    conn.Insert(SimpleModel.CreateRandom());
+                }
+            }
+        }
+
+        public void DeleteAllRows()
+        {
+            using (var conn = new MySqlConnection(_db.ConnectionString))
+            {
+                conn.Execute("DELETE FROM SimpleModels");
+            }
         }
 
         public IEnumerable<SimpleModel> ReadAll()
         {
             using(var conn = new MySqlConnection(_db.ConnectionString))
             {
-                return conn.Query<SimpleModel>("SELECT * FROM Models");
+                return conn.Query<SimpleModel>("SELECT * FROM SimpleModels");
             }
         }
     }

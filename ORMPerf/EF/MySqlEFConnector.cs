@@ -6,33 +6,37 @@ namespace ORMPerf.EF
 {
     class MySqlEFConnector : IDBConnector
     {
+        public string Name => "MySql Entity Framework";
         public void AddRandomRows(int count)
+        {
+            using (var ctx = new MSSQLContext())
+            {
+                for (int i = 0; i < count; i++)
+                {
+                    ctx.SimpleModels.Add(SimpleModel.CreateRandom());
+
+                }
+                ctx.SaveChanges();
+            }
+        }
+        public void AddRandomRowsOneByOne(int count)
         {
             using (var ctx = new MySqlContext())
             {
                 for (int i = 0; i < count; i++)
                 {
-                    var mdl = new SimpleModel();
-                    mdl.Id = Guid.NewGuid();
-                    mdl.Name = $"{i}";
-                    mdl.Birth = DateTime.Now;
-                    mdl.About = "";
-                    ctx.Models.Add(mdl);
+                    ctx.SimpleModels.Add(SimpleModel.CreateRandom());
+                    ctx.SaveChanges();
                 }
-                ctx.SaveChanges();
             }
-        }
-
-        public void Connect()
-        {
         }
 
         public void DeleteAllRows()
         {
-        }
-
-        public void Disconnect()
-        {
+            using(var ctx = new MySqlContext())
+            {
+                //ctx.Models.
+            }
         }
 
         public IEnumerable<SimpleModel> ReadAll()
@@ -40,7 +44,7 @@ namespace ORMPerf.EF
             var result = new List<SimpleModel>();
             using (var context = new MySqlContext())
             {
-                result.AddRange(context.Models);
+                result.AddRange(context.SimpleModels);
             }
             return result;
         }

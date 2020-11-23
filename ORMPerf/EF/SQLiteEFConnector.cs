@@ -9,45 +9,43 @@ namespace ORMPerf.EF
 {
     class SQLiteEFConnector : IDBConnector
     {
-        Database _db;
+        public string Name => "SQLite Entity Framework";
+        public void AddRandomRows(int count)
+        {
+            using (var ctx = new MSSQLContext())
+            {
+                for (int i = 0; i < count; i++)
+                {
+                    ctx.SimpleModels.Add(SimpleModel.CreateRandom());
 
+                }
+                ctx.SaveChanges();
+            }
+        }
         public IEnumerable<SimpleModel> ReadAll()
         {
             SimpleModel[] result = null;
             using(var ctx = new SQLiteContext())
             {
-                result = ctx.Models.ToArray();
+                result = ctx.SimpleModels.ToArray();
             }
             return result;
         }
 
-        public void AddRandomRows(int count)
+        public void AddRandomRowsOneByOne(int count)
         {
             using (var ctx = new SQLiteContext())
             {
                 for (int i = 0; i < count; i++)
                 {
-                    var mdl = new SimpleModel();
-                    mdl.Id = Guid.NewGuid();
-                    mdl.Name = $"{i}";
-                    mdl.Birth = DateTime.Now;
-                    mdl.About = "";
-                    ctx.Models.Add(mdl);
+                    ctx.SimpleModels.Add(SimpleModel.CreateRandom());
+                    ctx.SaveChanges();
                 }
-                ctx.SaveChanges();
+                
             }
         }
 
-        public void Connect()
-        {
-            _db = DBConfigMapper.GetDBConfig(DBType.SQLite);
-        }
-
         public void DeleteAllRows()
-        {
-        }
-
-        public void Disconnect()
         {
         }
     }

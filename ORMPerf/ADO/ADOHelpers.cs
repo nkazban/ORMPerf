@@ -11,7 +11,7 @@ namespace ORMPerf.ADO
         {
             var result = new SimpleModel();
 
-            result.Id = reader.GetGuid(0);
+            result.Id = reader.GetInt32(0);
             result.Name = reader.GetString(1);
             result.Birth = reader.GetDateTime(2);
             result.About = reader.GetString(3);

@@ -19,7 +19,7 @@ namespace ORMPerf
         static Dictionary<(DBType, ConnectionType), IDBConnector> _dictionary = new Dictionary<(DBType, ConnectionType), IDBConnector>();
         static DBConnectorsFactory()
         {
-            SqlMapper.AddTypeHandler(typeof(Guid), new GuidTypeHandler());
+            //SqlMapper.AddTypeHandler(typeof(Guid), new GuidTypeHandler());
 
             _dictionary.Add((DBType.SQLite, ConnectionType.EF), new SQLiteEFConnector());
             _dictionary.Add((DBType.SQLite, ConnectionType.Dapper), new SQLiteDapperConnector());

@@ -6,36 +6,37 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ORMPerf.EF;
 
-namespace ORMPerf.Migrations.SQLiteMigrations
+namespace ORMPerf.Migrations.MySqlMigrations
 {
-    [DbContext(typeof(SQLiteContext))]
-    [Migration("20201019184225_InitialCreate")]
-    partial class InitialCreate
+    [DbContext(typeof(MySqlContext))]
+    [Migration("20201113154315_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "5.0.0-rc.2.20475.6");
+                .HasAnnotation("ProductVersion", "3.1.9")
+                .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("ORMPerf.SimpleModel", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("int");
 
                     b.Property<string>("About")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("Birth")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime");
 
                     b.Property<string>("Name")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Models");
+                    b.ToTable("SimpleModels");
                 });
 #pragma warning restore 612, 618
         }

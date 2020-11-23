@@ -14,13 +14,13 @@ namespace ORMPerf.Migrations.SQLiteMigrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "5.0.0-rc.2.20475.6");
+                .HasAnnotation("ProductVersion", "3.1.9");
 
             modelBuilder.Entity("ORMPerf.SimpleModel", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("About")
                         .HasColumnType("TEXT");
@@ -33,7 +33,7 @@ namespace ORMPerf.Migrations.SQLiteMigrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Models");
+                    b.ToTable("SimpleModels");
                 });
 #pragma warning restore 612, 618
         }
