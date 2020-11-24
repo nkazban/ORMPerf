@@ -6,6 +6,7 @@ using System.Text;
 
 namespace ORMPerf
 {
+    using Core;
     class Benchmark
     {
         IDBConnector _connector;
