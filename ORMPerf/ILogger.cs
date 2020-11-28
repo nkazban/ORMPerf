@@ -1,4 +1,4 @@
-﻿namespace ORMPerf.Core
+﻿namespace ORMPerf
 {
     public interface ILogger
     {

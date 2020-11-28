@@ -5,6 +5,7 @@ using System.IO;
 namespace ORMPerf
 {
     using Core;
+    using System.Data.Common;
 
     class ConsoleLogger : ILogger
     {
@@ -26,7 +27,7 @@ namespace ORMPerf
 
         public void WriteLine(string line)
         {
-            File.WriteAllText(_path, line);
+            File.AppendAllText(_path, line);
         }
     }
     /// <summary>
@@ -54,24 +55,25 @@ namespace ORMPerf
     {
         static void Main(string[] args)
         {
-            var logger = new ConsoleLogger();
-            for (int i = 2; i > -1; i--)
+            string logFileName = $"D:\\ORMPerfLog_{DateTime.Now:d_MM_yyyy_h_m_s}.txt";
+            var logger = new GeneralLogger(logFileName);
+            for (int i = 0; i < 3; i++)
             {
                 for (int j = 0; j < 3; j++)
                 {
-                    IDBConnector connector = DBConnectorsFactory.GetConnector((DBType)i, (ConnectionType)j);
-
-                    var bench = new Benchmark(connector, logger);
+                    var bench = new Benchmark(DBConnectorsFactory.GetConnector((DBType)i, (ConnectionType)j), logger);
                     bench.Init();
-                    bench.WritingTest(100);
-                    bench.WritingOneByOneTest(100);
-                    bench.ReadingTest();
-                    bench.DeletingTest();
-                    Thread.Sleep(100);
-                    Console.WriteLine();
+                    for (int k = 0; k < 10; k++)
+                    {
+                        logger.WriteLine($"<--- Test pack #{k + 1} --->");
+                        bench.WritingTest(100);
+                        bench.WritingOneByOneTest(100);
+                        bench.ReadingTest();
+                        bench.DeletingTest();
+                    }
+                    bench.Dispose();
                 }
             }
-
             Console.WriteLine("Done");
             Console.ReadLine();
         }

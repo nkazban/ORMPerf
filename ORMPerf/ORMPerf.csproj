@@ -6,6 +6,10 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <None Remove="Benchmark.cs~RF1754d9c.TMP" />
+    </ItemGroup>
+
+    <ItemGroup>
       <ProjectReference Include="..\ORMPerf.Core\ORMPerf.Core.csproj" />
     </ItemGroup>
 

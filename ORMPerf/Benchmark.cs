@@ -7,17 +7,22 @@ using System.Text;
 namespace ORMPerf
 {
     using Core;
-    class Benchmark
+    using System.Linq;
+
+    class Benchmark : IDisposable
     {
         IDBConnector _connector;
         Stopwatch _sw;
         ILogger _logger;
+
+        IDataAggregator _dataAggregator;
 
         public Benchmark(IDBConnector connector, ILogger logger)
         {
             _connector = connector;
             _logger = logger;
             _sw = new Stopwatch();
+            _dataAggregator = new SimpleDataAggregator();
         }
 
         public void Init()
@@ -31,7 +36,8 @@ namespace ORMPerf
             _sw.Restart();
             _connector.ReadAll();
             _sw.Stop();
-            PrintResult();
+            _dataAggregator.AddInfo(TestType.Reading, _sw.Elapsed);
+            _logger.WriteLine($"Elapsed time {_sw.Elapsed}");
         }
 
         public void WritingTest(int rowsCount)
@@ -42,9 +48,13 @@ namespace ORMPerf
             {
                 _connector.AddRandomRows(rowsCount);
                 _sw.Stop();
-                PrintResult();
+                _dataAggregator.AddInfo(TestType.Writing, _sw.Elapsed);
+                _logger.WriteLine($"Elapsed time {_sw.Elapsed}");
             }
-            catch { }
+            catch (Exception e)
+            {
+                _logger.WriteLine("Catched error : " + e.ToString());
+            }
         }
 
         public void WritingOneByOneTest(int rowsCount)
@@ -53,7 +63,8 @@ namespace ORMPerf
             _sw.Restart();
             _connector.AddRandomRowsOneByOne(rowsCount);
             _sw.Stop();
-            PrintResult();
+            _dataAggregator.AddInfo(TestType.WritingOneByOne, _sw.Elapsed);
+            _logger.WriteLine($"Elapsed time {_sw.Elapsed}");
         }
 
         public void DeletingTest()
@@ -62,17 +73,23 @@ namespace ORMPerf
             _sw.Restart();
             _connector.DeleteAllRows();
             _sw.Stop();
-            PrintResult();
+            _dataAggregator.AddInfo(TestType.Deleting, _sw.Elapsed);
+            _logger.WriteLine($"Elapsed time {_sw.Elapsed}");
+        }
+
+        public void Dispose()
+        {
+            _logger.WriteLine(string.Format("{0, 20}|{1, 20}|{2, 20}|{3, 20}", "Writing", "Writing one by one", "Reading", "Deleting"));
+            _logger.WriteLine(string.Format("{0, 20}|{1, 20}|{2, 20}|{3, 20}", 
+                _dataAggregator.GetAverage(TestType.Writing),
+                _dataAggregator.GetAverage(TestType.WritingOneByOne),
+                _dataAggregator.GetAverage(TestType.Reading),
+                _dataAggregator.GetAverage(TestType.Deleting)));
         }
 
         void AddHeader()
         {
             _logger.WriteLine($"<===| {_connector.Name} |===>");
-        }
-
-        void PrintResult()
-        {
-            _logger.WriteLine($"Elapsed time {_sw.Elapsed}");
         }
     }
 }

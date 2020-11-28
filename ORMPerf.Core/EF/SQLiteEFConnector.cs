@@ -47,6 +47,15 @@ namespace ORMPerf.Core.EF
 
         public void DeleteAllRows()
         {
+            var all = ReadAll();
+            using (var ctx = new SQLiteContext())
+            {
+                foreach (var model in all)
+                {
+                    ctx.Remove(model);
+                }
+                ctx.SaveChanges();
+            }
         }
     }
 }

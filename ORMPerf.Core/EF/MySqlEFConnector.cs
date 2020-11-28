@@ -33,9 +33,14 @@ namespace ORMPerf.Core.EF
 
         public void DeleteAllRows()
         {
-            using(var ctx = new MySqlContext())
+            var all = ReadAll();
+            using (var ctx = new MySqlContext())
             {
-                //ctx.Models.
+                foreach (var model in all)
+                {
+                    ctx.Remove(model);
+                }
+                ctx.SaveChanges();
             }
         }
 

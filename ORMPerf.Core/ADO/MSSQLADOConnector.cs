@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Primitives;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Text;
@@ -18,7 +19,31 @@ namespace ORMPerf.Core.ADO
 
         public void AddRandomRows(int count)
         {
-            throw new NotImplementedException();
+            using (var conn = new SqlConnection(_db.ConnectionString))
+            {
+                conn.Open();
+
+                var command = conn.CreateCommand();
+                StringBuilder sb = new StringBuilder("INSERT INTO SimpleModels (Name, Birth, About) VALUES ");
+
+                for (int i = 0; i < count; i++)
+                {
+                    sb.Append($"(@Name{i}, @Birth{i}, @About{i})");
+                    var p1 = new SqlParameter($"@Name{i}", $"{i}");
+                    command.Parameters.Add(p1);
+
+                    var p2 = new SqlParameter($"@Birth{i}", DateTime.Now);
+                    command.Parameters.Add(p2);
+
+                    var p3 = new SqlParameter($"@About{i}", "");
+                    command.Parameters.Add(p3);
+                    if (i < count - 1)
+                        sb.Append(",");
+                }
+                command.CommandText = sb.ToString();
+
+                command.ExecuteNonQuery();
+            }
         }
 
         public void AddRandomRowsOneByOne(int count)
