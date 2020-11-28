@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Threading;
 using System.IO;
 
 namespace ORMPerf
 {
     using Core;
-    using System.Data.Common;
 
     class ConsoleLogger : ILogger
     {
@@ -27,7 +25,7 @@ namespace ORMPerf
 
         public void WriteLine(string line)
         {
-            File.AppendAllText(_path, line);
+            File.AppendAllText(_path, line + "\n");
         }
     }
     /// <summary>

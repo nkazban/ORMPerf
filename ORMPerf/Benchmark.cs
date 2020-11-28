@@ -1,13 +1,9 @@
-﻿using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Diagnostics;
-using System.Text;
 
 namespace ORMPerf
 {
     using Core;
-    using System.Linq;
 
     class Benchmark : IDisposable
     {
